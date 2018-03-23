@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+#nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid grey;
+    border-radius: 5px;
+    width: 65%;
+    margin: 0 auto;
+}
+ul,li {
+    list-style-type: none;
+}
+ul {
+    display: flex;
+    margin: 5px 0;
+
+}
+#nav li {
+    line-height: 3em;
+    width: 60px;
+    margin: 0 5px;
+    background: linear-gradient( #333, #555);
+    border-radius: 5px;
+    color: white;
+    box-shadow: 1px 2px 2px yellowgreen;
+    text-align: center;
+}
+#nav li span {
+    display: none;
+}
+#nav li:hover span {
+    display: inline;
+    color: burlywood;
+    cursor: pointer;
+    font-weight: bold;
+}

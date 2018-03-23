@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>easy search</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div id="nav">
+
+    </div>
+
+<script>
+
+    var keys = [['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']];
+    var hash = {
+        "q":"qq.com",
+        "w":"weibo.com",
+        "e":"ele.me",
+        "r":"ruanyifeng.com",
+        "t":"taobao.com",
+        "y":"youtobe.com",
+        "u":"a",
+        "i":"d",
+        "o":"f",
+        "p":"",
+        "a":"",
+        "s":"",
+        "d":"",
+        "f":"",
+        "g":"",
+        "h":"",
+        "j":"",
+        "k":"",
+        "l":"",
+        "z":"",
+        "x":"",
+        "c":"",
+        "v":"",
+        "b":"",
+        "n":"",
+        "m":""  
+    }
+
+    var localHash = JSON.parse(localStorage.getItem("zxc")||"null");
+    if(localHash){
+            hash = localHash;
+    }
+
+    var row = 0;
+    while(row<keys.length){
+        var keyNum = 0;
+        var ul = document.createElement("ul");
+        while(keyNum<keys[row].length){
+            var li = document.createElement("li");
+            li.textContent = keys[row][keyNum].toLocaleUpperCase();
+            var edit = document.createElement("span");
+            edit.textContent = "编辑";
+            edit.id = keys[row][keyNum];
+            edit.onclick = function(asd){
+                var newsite = prompt("请输入新的网址");
+                hash[asd.target.id] = newsite;
+                localStorage.setItem("zxc",JSON.stringify(hash));
+            }
+            li.appendChild(edit);
+            ul.appendChild(li);
+            keyNum++
+        }
+        nav.appendChild(ul);
+        row++;
+    }
+
+ 
+    document.onkeypress = function(asd){
+        var key = asd.key;
+        var website = hash[key];
+        window.open("http://"+website,"_blank")
+    }
+
+</script>
+
+</body>
+</html>
