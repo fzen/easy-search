@@ -72,4 +72,5 @@ main {
 }
 #nav li:hover button {
     display: inline;
+    cursor: pointer;
 }
