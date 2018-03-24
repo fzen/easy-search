@@ -8,78 +8,117 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <div id="nav">
+    <header></header>
 
-    </div>
+    <main>
+        <nav id="nav">
 
-<script>
+        </nav>
+    </main>
 
-    var keys = [['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']];
-    var hash = {
-        "q":"qq.com",
-        "w":"weibo.com",
-        "e":"ele.me",
-        "r":"ruanyifeng.com",
-        "t":"taobao.com",
-        "y":"youtobe.com",
-        "u":"a",
-        "i":"d",
-        "o":"f",
-        "p":"",
-        "a":"",
-        "s":"",
-        "d":"",
-        "f":"",
-        "g":"",
-        "h":"",
-        "j":"",
-        "k":"",
-        "l":"",
-        "z":"",
-        "x":"",
-        "c":"",
-        "v":"",
-        "b":"",
-        "n":"",
-        "m":""  
-    }
+    <script>
+        // 初始化数据
+        var data = init();
+        var keys = data.keys;
+        var hash = data.hash;
 
-    var localHash = JSON.parse(localStorage.getItem("zxc")||"null");
-    if(localHash){
-            hash = localHash;
-    }
+        //根据数据生成键盘
+        generatorKeyBoard(keys,hash);
 
-    var row = 0;
-    while(row<keys.length){
-        var keyNum = 0;
-        var ul = document.createElement("ul");
-        while(keyNum<keys[row].length){
-            var li = document.createElement("li");
-            li.textContent = keys[row][keyNum].toLocaleUpperCase();
-            var edit = document.createElement("span");
-            edit.textContent = "编辑";
-            edit.id = keys[row][keyNum];
-            edit.onclick = function(asd){
-                var newsite = prompt("请输入新的网址");
-                hash[asd.target.id] = newsite;
-                localStorage.setItem("zxc",JSON.stringify(hash));
+        //监听用户按键事件
+        listenToUser();
+
+        function listenToUser(){
+            document.onkeypress = function(e){
+                var key = e.key;
+                if(hash[key]){
+                    window.open("http://"+hash[key],"_blank");
+                }else {
+                    alert(key+"键未绑定网址哦，请点击"+key+"键上的编辑按钮输入要绑定的网址！")
+                }
             }
-            li.appendChild(edit);
-            ul.appendChild(li);
-            keyNum++
         }
-        nav.appendChild(ul);
-        row++;
-    }
 
- 
-    document.onkeypress = function(asd){
-        var key = asd.key;
-        var website = hash[key];
-        window.open("http://"+website,"_blank")
-    }
 
-</script>
+        function init(){
+            var keys = [['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']];
+            var hash = {"q":"qq.com","w":"weibo.com","e":"ele.me","r":"ruanyifeng.com","t":"taobao.com","y":"yy.com","u":"","i":"","o":"","p":"","a":"", "s":"","d":"","f":"", "g":"","h":"","j":"","k":"", "l":"","z":"","x":"","c":"","v":"","b":"", "n":"","m":""}
+            var hashInLocalStorage = getObjectFromLocalStorage("hash");
+            if(hashInLocalStorage){
+                hash = hashInLocalStorage;
+            }
+            return {
+                "keys":keys,
+                "hash":hash             //对象中引号什么时候加什么时候不需要加？？？？
+            }
+        }
 
+        function generatorKeyBoard(keys,hash){
+            for(var row = 0; row < keys.length; row++){
+                var ul = creatTag("ul");
+                for(var key = 0; key < keys[row].length; key++){
+                    var currentKey = keys[row][key];
+                    var li = creatTag("li",{"id":currentKey});
+                    var kbd = creatTag("kbd",{"textContent":currentKey.toLocaleUpperCase()});
+                    var img = creatImage(hash[currentKey]);
+                    var btn = creatBtn(currentKey);
+                    li.appendChild(kbd);
+                    li.appendChild(img);
+                    li.appendChild(btn);
+                    ul.appendChild(li);
+                }
+                nav.appendChild(ul);
+            }
+        }
+
+        function creatImage(domain){
+            if(domain){
+                var img = creatTag("img",{"src":"http://"+domain+"/favicon.ico"});
+            }else{
+                var img = creatTag("img",{"src":"//i.loli.net/2017/11/10/5a05afbc5e183.png"})
+            }
+            img.onerror = function(e){
+                e.target.src = "//i.loli.net/2017/11/10/5a05afbc5e183.png";
+            }
+            return img;
+        }
+
+        function creatBtn(key){
+            var btn = document.createElement("button");
+            btn.textContent = "编辑";
+            btn.onclick = function(e){
+                var currentBtn = e.target;
+                var key = currentBtn.parentElement["id"];
+                var newSite = prompt("请输入新的网址：");
+                if(newSite){
+                    currentBtn.previousSibling.src = "http://"+newSite+"/favicon.ico";
+                    hash[key] = newSite;
+                    setHashLocalStorage("hash",hash);
+
+                }
+            }
+            return btn;
+        }
+
+        function setHashLocalStorage(name,data){
+            return localStorage.setItem("hash",JSON.stringify(data));
+        }
+
+        function getObjectFromLocalStorage(name){
+            return JSON.parse(localStorage.getItem(name)||"null");    //试了一下加不加 ||“null” 好像没区别，localStorage里找不到也是返回null，JSON.parse(null)和JSON.parse("null")都返回null。
+        }
+
+        function creatTag(tagName,attributs){
+            var tag = document.createElement(tagName)
+            if(attributs){
+                for(var attr in attributs){
+                    tag[attr] = attributs[attr];
+                }
+            }
+            return tag;
+        }
+
+    </script>
+    <footer></footer>
 </body>
 </html>
